@@ -26,7 +26,7 @@
         goto 999
       endIf
       do i = 1,3
-        read(inFileUnitA,*) matrixInA(1,i),matrixInA(2,i),matrixInA(3,i)
+        read(inFileUnitA,*) matrixInA(i,1),matrixInA(i,2),matrixInA(i,3)
       endDo
       close(inFileUnitA)
 !
@@ -48,7 +48,7 @@
 !
 !     Format statements.
 !
- 1000 format(3(2x,f5.1))
+! 1000 format(3(2x,f5.1))
 !
 !     Do the printing job.
 !
@@ -56,6 +56,6 @@
 !
 ! ADD CODE HERE
 !
-!
+      write(*,'(3(2x,f5.1))') matrix
       return
       End Subroutine PrintMatrix3x3
