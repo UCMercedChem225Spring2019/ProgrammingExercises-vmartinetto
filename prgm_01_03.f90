@@ -28,7 +28,7 @@
         goto 999
       endIf
       do i = 1,3
-        read(inFileUnitA,*) matrixInA(i,1),matrixInA(i,2),matrixInA(i,3)
+        read(inFileUnitA,*) matrixInA(1,i),matrixInA(2,i),matrixInA(3,i)
       endDo
       close(inFileUnitA)
 !
@@ -41,7 +41,7 @@
         goto 999
       endIf
       do i = 1,3
-        read(inFileUnitB,*) matrixInB(i,1),matrixInB(i,2),matrixInB(i,3)
+        read(inFileUnitB,*) matrixInB(1,i),matrixInB(2,i),matrixInB(3,i)
       endDo
       close(inFileUnitB)
 !
@@ -52,7 +52,7 @@
 !
 !     Multiply A and B using MatMul and print using subroutine.
 !
-      matrixProduct = MatMul(matrixInB,matrixInA)
+      matrixProduct = MatMul(matrixInA,matrixInB)
       call PrintMatrix3x3(matrixProduct)
 !
 !
@@ -78,6 +78,6 @@
 !
 ! ADD CODE HERE
 !
-      write(*,'(3(2x,f5.1))') matrix
+      write(*,'(3(2x,f5.1))') transpose(matrix)
       return
       End Subroutine PrintMatrix3x3
