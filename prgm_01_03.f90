@@ -1,4 +1,4 @@
-      Program prgm_01_01
+      Program prgm_01_03
 !
 !     This program reads a 3x3 matrix from a user-provided input file. After the
 !     file is opened and read, it is closed and then printed.
@@ -6,16 +6,18 @@
 !     H. P. Hratchian, 2019.
 !
       implicit none
-      integer,parameter::inFileUnitA=10
+      integer,parameter::inFileUnitA=10,inFileUnitB=11
       integer::errorFlag,i
-      real,dimension(3,3)::matrixInA
-      character(len=128)::fileNameA
+      real,dimension(3,3)::matrixInA,matrixInB,matrixProduct
+      character(len=128)::fileNameA,fileNameB
 !
 !
 !     Start by asking the user for the name of the data file.
 !
-      write(*,*)' What is the name of the input data file?'
+      write(*,*)' What is the name of the input data file A?'
       read(*,*) fileNameA
+      write(*,*)' What is the name of the input data file B?'
+      read(*,*) fileNameB
 !
 !     Open the data file and read matrixInA from that file.
 !
@@ -30,12 +32,32 @@
       endDo
       close(inFileUnitA)
 !
-!     Call the subroutine PrintMatrix to print matrixInA.
+!     Copied A above and changed variables to B
+!
+      open(unit=inFileUnitB,file=TRIM(fileNameB),status='old',  &
+        iostat=errorFlag)
+      if(errorFlag.ne.0) then
+        write(*,*)' There was a problem opening the input file.'
+        goto 999
+      endIf
+      do i = 1,3
+        read(inFileUnitB,*) matrixInB(1,i),matrixInB(2,i),matrixInB(3,i)
+      endDo
+      close(inFileUnitB)
+!
+!     Call the subroutine PrintMatrix to print matrixInA and matrixInB.
 !
       call PrintMatrix3x3(matrixInA)
+      call PrintMatrix3x3(matrixInB)
+!
+!     Multiply A and B using MatMul and print using subroutine.
+!
+      matrixProduct = MatMul(matrixInA,matrixInB)
+      call PrintMatrix3x3(matrixProduct)
+!
 !
   999 continue
-      End Program prgm_01_01
+      End Program prgm_01_03
 
 
       Subroutine PrintMatrix3x3(matrix)
