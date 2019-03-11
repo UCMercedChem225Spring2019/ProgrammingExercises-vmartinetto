@@ -35,7 +35,6 @@
       do i = 1,(NDim*(NDim+1))/2
         Read(IIn,*) Array_Input(i)
       end do
-      print *, Array_Input
 !
 !     Convert Array_Input to Matrix and print the matrix.
 !
