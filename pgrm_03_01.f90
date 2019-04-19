@@ -38,7 +38,7 @@
 !     (full storage) matrix invSqrtInputMatrix.
 !
       write(*,*)' The matrix loaded (column) upper-triangle packed:'
-      call SymmetricPacked2Matrix_UpperPacked(nDim,inputSymMatrix,  &
+      call SymmetricPacked2Matrix_UpperPac(nDim,inputSymMatrix,  &
         inputSqMatrix)
       write(*,*)' Input Matrix:'
       call Print_Matrix_Full_Real(inputSqMatrix,nDim,nDim)
@@ -47,7 +47,7 @@
       call Print_Matrix_Full_Real(invSqrtInputMatrix,nDim,nDim)
       write(*,*)' Matrix product that should be the identity.'
       call Print_Matrix_Full_Real(MatMul(MatMul(invSqrtInputMatrix,  &
-        invSqrtInputMatrix),inputSqMatrix),nDim,nDim)
+        inputSqMatrix),invSqrtInputMatrix),nDim,nDim)
 !
       end program pgrm_03_01
 
@@ -57,8 +57,10 @@
       implicit none
       integer :: nDim, i 
       real :: Ierror
-      real, Dimension(nDim) :: inputSymMatrix,Eval,input_copy
+      real, Dimension((nDim*(nDim+1)/2)) :: inputSymMatrix,input_copy
+      real, Dimension(NDim) :: Eval
       real,Dimension(nDim,nDim) :: invSqrtInputMatrix,Evec,EvecT,EvalMat
+      real,dimension(nDim,nDim) :: Mat
       real, Dimension(nDim*3) :: temp_vec
 !
       input_copy = inputSymMatrix
@@ -66,12 +68,19 @@
       Call SSPEV('V','U',nDim,inputSymMatrix,Eval,Evec,nDim, &
         temp_vec,Ierror)
 !
+!      call Print_Matrix_Full_Real(Evec,nDim,nDim)
       EvecT = transpose(Evec)
+!      call Print_Matrix_Full_Real(EvecT,nDim,nDim)
+!
       do i = 1,nDim
         EvalMat(i,i) = 1/(sqrt(Eval(i)))
       end do
 !
-      invSqrtInputMatrix = MatMul(MatMul(EvalMat,EvecT),Evec)
+!      print*, EvalMat
+      Mat = MatMul(Evec,MatMul(EvalMat,EvecT))
+!      print*, Mat
+      invSqrtInputMatrix = Mat
+!
       End Subroutine InvSQRT_SymMatrix
 
       Subroutine Print_Matrix_Full_Real(AMat,M,N)
