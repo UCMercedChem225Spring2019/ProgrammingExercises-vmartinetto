@@ -41,11 +41,11 @@
 !     provided on the command line.
 !
       call Get_Command_Argument(1,cmdlineArg)
-      read(cmdlineArg,'(I1)') nElectrons
+      read(cmdlineArg,'(I)') nElectrons
       nOcc = nElectrons/2
 !
       call Get_Command_Argument(2,cmdlineArg)
-      read(cmdlineArg,'(I1)') nBasis
+      read(cmdlineArg,'(I)') nBasis
       lenSym = (nBasis*(nBasis+1))/2
       allocate(symFock(lenSym),symCoreHamiltonian(lenSym),  &
         symOverlap(lenSym),tempSymMatrix(lenSym))
@@ -90,7 +90,9 @@
 !
 !     Form the square-root of the overlap matrix.
 !
+      tempSymMatrix = symOverlap
       call InvSQRT_SymMatrix(nBasis,symOverlap,invSqrtOverlap)
+      symOverlap = tempSymMatrix
 !
 !     Form fTilde and solve for the MO energies and coefficients.
 !
@@ -115,7 +117,7 @@
 !
 !
 !
-      densityMatrix = Matmul(transpose(moCoefficients),moCoefficients)
+      densityMatrix = Matmul(moCoefficients,transpose(moCoefficients))
       write(*,*) 'Density Matrix:'
       call Print_Matrix_Full_Real(densityMatrix,nBasis,nBasis)
 !
@@ -141,7 +143,7 @@
 !
       call SymmetricPacked2Matrix_UpperPac(nBasis,symOverlap,  &
         tempSqMatrix)
-      tempSqMatrix = matmul(tempSqMAtrix,densityMatrix)
+      tempSqMatrix = matmul(densityMatrix,tempSqMatrix)
       tracePS = 0
       do i = 1,nElectrons
         tracePS = tracePS + tempSqMatrix(i,i)
